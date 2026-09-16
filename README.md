@@ -26,6 +26,16 @@ Get-Content "$env:TEMP\deming-install.ps1"
 powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\deming-install.ps1"
 ```
 
+## Uninstall Deming
+
+This removes Deming's global Pi configuration and its `$HOME\.deming` clone. It leaves Pi, other settings, skills, credentials, and sessions installed.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/ianphil/Deming/master/uninstall.ps1 | iex"
+```
+
+Use `-KeepRepository` when running the script locally if you want to remove the configuration but keep the clone.
+
 The skills cover four stages:
 
 - `plan`: form a hypothesis and predict the result
