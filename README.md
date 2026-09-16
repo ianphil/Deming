@@ -7,7 +7,7 @@ Deming is a set of agent instructions and skills for the Agent Development Lifec
 The four skills ask the agent to predict what a change will do, make the change, and use the results to decide what to do next:
 
 1. [Plan](skills/plan/SKILL.md). Define the goal, scope, and acceptance criteria. Predict the result and choose how to test it.
-2. [Do](skills/do/SKILL.md). Implement the approved plan with the smallest useful change or experiment.
+2. [Do](skills/do/SKILL.md). Run the planned experiment without contaminating the learning.
 3. [Study](skills/study/SKILL.md). Review the change, run focused tests, and compare the evidence with the prediction. Record what the agent learned and what remains uncertain.
 4. [Act](skills/act/SKILL.md). Adopt, revise, or abandon the change. Update the instructions or standards that need to change, or plan another experiment. Get authorization before pushing a branch or opening a pull request.
 

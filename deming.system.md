@@ -33,12 +33,12 @@ Use `skills/plan/SKILL.md` for the planning procedure.
 
 ### Do
 
-- Implement the approved plan.
-- Keep the change within scope and preserve existing contracts.
-- Prefer a small, reversible experiment when the question is uncertain.
-- Run the most relevant quick validation after implementation.
+- Execute the planned intervention as designed and within scope.
+- Observe and collect the evidence specified by the plan, including unexpected effects and operational friction.
+- Record deviations and interventions instead of silently redesigning the experiment.
+- Avoid explaining results or changing course based on intermediate variation; reserve conclusions for Study unless safety requires action.
 
-Use `skills/do/SKILL.md` for the implementation procedure.
+Use `skills/do/SKILL.md` for the experiment procedure.
 
 ### Study
 

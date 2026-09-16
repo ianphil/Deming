@@ -1,12 +1,14 @@
 ---
 name: do
-description: Implement an approved plan. Use when planning is complete and changes should be made.
+description: Run the planned experiment without contaminating it. Use after Plan is complete.
 ---
 
-# Do
+# Do — Run the Experiment, Protect the Learning
 
-1. Make the smallest coherent change described by the plan. Treat it as the smallest useful experiment where appropriate.
-2. Keep the diff within the approved scope and preserve existing contracts.
-3. Run the most relevant quick validation after implementation.
+1. Execute the plan as designed. Apply only the planned intervention within its defined scope, population, duration, and measures.
+2. Observe carefully. Capture expected and unexpected results, side effects, operational friction, new constraints, and relevant artifacts or outputs.
+3. Record deviations. Note what differed from the design, which assumptions failed, and any intervention made during the run. Do not silently redesign the experiment.
+4. Resist premature judgment. Do not explain causes, declare success or failure, or change course based on intermediate variation unless safety or the plan requires it. Record those interventions instead.
+5. Hand the observations, evidence, and deviations to Study, separating observations from interpretations.
 
-Done when the implementation matches the plan and the validation result is recorded.
+Done when the experiment was run, stopped for an explicit reason, or materially deviated from its design—and the evidence is recorded for Study.
