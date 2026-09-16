@@ -13,6 +13,29 @@ The four skills ask the agent to predict what a change will do, make the change,
 
 [SOUL.md](SOUL.md) defines Deming's voice, values, and boundaries. [deming.system.md](deming.system.md) sets the workflow and tells the agent when to use each skill.
 
+## Cycle records
+
+For a repository change, Plan starts a cycle in the target repository. Choose an unused ID and start from the intended base branch with a clean working tree and at least one commit:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "$HOME\.deming\scripts\start-cycle.ps1" -Cycle 001-adr-crud -Repo C:\src\adr-ui
+```
+
+Use your actual Deming installation path if different. The script creates and checks out `deming/001-adr-crud` from the current branch, then copies four templates:
+
+```text
+adr-ui/
+└── .deming/cycles/001-adr-crud/
+    ├── plan.md
+    ├── do.md
+    ├── study.md
+    └── act.md
+```
+
+The files begin as pending scaffolds, not completed phase outputs. Plan fills `plan.md`; Do consumes it and fills `do.md`; Study consumes both and fills `study.md`; Act records the disposition in `act.md`. Resume by giving Deming the existing cycle directory, not by rerunning setup. Keep these records with the application changes on the task branch.
+
+Setup refuses dirty repositories, detached HEADs, ignored cycle paths, and existing cycle directories or task branches. It does not commit, push, or merge. If writing fails after branch creation, inspect the retained branch and partial files before proceeding.
+
 ## Install for Pi
 
 The PowerShell installer installs Pi if needed, clones Deming to `$HOME\.deming`, and adds its instructions and skills to your global Pi configuration. Deming then applies across projects for your user account.
@@ -77,6 +100,8 @@ Run the regression checks from the repository root with Windows PowerShell 5.1 a
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File tests\installer.tests.ps1
 pwsh -NoProfile -File tests\installer.tests.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File tests\cycle.tests.ps1
+pwsh -NoProfile -File tests\cycle.tests.ps1
 ```
 
-The checks use temporary configuration and repositories. They replace Pi installation and network updates with test functions and leave your real Pi configuration untouched.
+The checks use temporary configuration and repositories. Installer checks replace Pi installation and network updates with test functions and leave your real Pi configuration untouched. Cycle checks exercise branch creation, template rendering, and refusal of unsafe or conflicting setup requests without network access.

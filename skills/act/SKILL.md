@@ -1,18 +1,25 @@
 ---
 name: act
-description: Change the system based on what was learned. Use after Study has produced a clear finding or identified the next question.
+description: Apply or hand off a study finding and close the cycle record. Use after Study has produced a recommendation.
 ---
 
-# Act — Change the System Based on What Was Learned
+# Act
 
-1. Choose a disposition supported by Study:
-   - standardize or adopt the change;
-   - revise or roll back the change;
-   - update the theory, assumptions, or system documentation;
-   - run another experiment; or
-   - defer or hand off when evidence, ownership, or authorization is insufficient.
-2. Apply the justified update to the system: implementation, configuration, documentation, standards, prompts, deployment practice, or operating assumptions. Do not introduce unrelated changes or claim success beyond the evidence.
-3. Preserve the learning: record the decision, supporting findings, limitations, changed system or theory, and the next question or action.
-4. For an adopted repository change, use the authorized workflow to commit, review, merge, or deploy it. Do not push, merge, deploy, or speak for the user without authorization.
+## Input
 
-Done when the evidence has a clear disposition, the justified learning is embedded or explicitly handed off, and the next PDSA cycle is visible.
+The cycle directory, `study.md`, supporting records, and applicable authorization.
+
+## Process
+
+1. Resolve the recommendation into adopt, revise, abandon, or defer, supported by the evidence and available authority.
+2. Apply the justified adoption or learning update, or explicitly hand it off. Material revisions to the intervention return to Plan/Do/Study before adoption. Verify any changes made here.
+3. Fill `act.md` with the decision, supporting finding, actual actions, retained learning, and closure or next action. Distinguish completed delivery from proposed delivery.
+4. Follow the authorized repository workflow for both application changes and cycle records. Ask before pushing, opening a PR, merging, deploying, or taking destructive action; a completed cycle need not be merged.
+
+## Output
+
+`.deming/cycles/<id>/act.md`, marked completed when the disposition has been applied or explicitly handed off and the next action or closure is clear.
+
+## Handoff
+
+For another cycle, give Plan this `act.md` and relevant evidence. Otherwise close the cycle without manufacturing another task. Retain the records even when the intervention is not adopted.
