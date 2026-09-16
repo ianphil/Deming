@@ -66,6 +66,22 @@ To update an existing installation:
 powershell -NoProfile -ExecutionPolicy Bypass -File "$HOME\.deming\install.ps1"
 ```
 
+### Startup version check
+
+Deming reports its installed path, commit, and update status once per session before project work. The check script never merges or updates working files:
+
+```powershell
+# Local-only: compare against cached upstream information.
+powershell -NoProfile -ExecutionPolicy Bypass -File "$HOME\.deming\scripts\check-update.ps1"
+
+# With network permission: fetch the configured upstream remote first.
+powershell -NoProfile -ExecutionPolicy Bypass -File "$HOME\.deming\scripts\check-update.ps1" -Fetch
+```
+
+`Status` is `current`, `behind`, `ahead`, `diverged`, `modified`, or `unknown`. `Freshness` distinguishes a cached comparison from a successful fetch or an unavailable fetch. A failed check reports uncertainty rather than blocking project work. `-InstallDir` can select another installed clone; by default the script checks the clone containing itself, not the current project.
+
+Deming asks before updating a behind installation and uses a fast-forward-only merge after a fresh, clean check. It preserves local changes and stops for a fresh session after updating. Restarting or `/reload` alone does not download new files. Older installations need the one-time update above before they can follow this startup rule.
+
 ### Custom location
 
 Both `install.ps1` and `uninstall.ps1` accept `-InstallDir` when you run them locally. Relative paths resolve from the current PowerShell directory. Use the same location when updating or uninstalling.
@@ -102,6 +118,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tests\installer.tests.ps1
 pwsh -NoProfile -File tests\installer.tests.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File tests\cycle.tests.ps1
 pwsh -NoProfile -File tests\cycle.tests.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File tests\update.tests.ps1
+pwsh -NoProfile -File tests\update.tests.ps1
 ```
 
-The checks use temporary configuration and repositories. Installer checks replace Pi installation and network updates with test functions and leave your real Pi configuration untouched. Cycle checks exercise branch creation, template rendering, and refusal of unsafe or conflicting setup requests without network access.
+The checks use temporary configuration and repositories. Installer checks replace Pi installation and network updates with test functions and leave your real Pi configuration untouched. Cycle checks exercise branch creation, template rendering, and refusal of unsafe or conflicting setup requests without network access. Update checks use local Git repositories to exercise version reporting and fetch failures; they do not contact GitHub or change the installed Deming.
