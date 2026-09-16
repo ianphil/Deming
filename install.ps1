@@ -4,6 +4,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+$InstallDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($InstallDir)
 $repoUrl = "https://github.com/ianphil/Deming.git"
 $piDir = Join-Path $HOME ".pi\agent"
 $appendPath = Join-Path $piDir "APPEND_SYSTEM.md"
@@ -18,6 +19,13 @@ if (-not (Get-Command pi -ErrorAction SilentlyContinue)) {
     Invoke-Expression (Invoke-RestMethod "https://pi.dev/install.ps1")
 }
 
+$machinePath = [Environment]::GetEnvironmentVariable("Path", "Machine")
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+$env:Path = "$machinePath;$userPath;$env:Path"
+if (-not (Get-Command pi -ErrorAction SilentlyContinue)) {
+    throw "Pi is not available after installation. Restart PowerShell and run this script again."
+}
+
 if (Test-Path (Join-Path $InstallDir ".git")) {
     Write-Host "Updating Deming in $InstallDir..."
     & git -C $InstallDir pull --ff-only
@@ -30,11 +38,13 @@ if (Test-Path (Join-Path $InstallDir ".git")) {
     if ($LASTEXITCODE -ne 0) { throw "Could not clone Deming." }
 }
 
-New-Item -ItemType Directory -Force -Path $piDir | Out-Null
-
 $soulPath = Join-Path $InstallDir "SOUL.md"
 $systemPath = Join-Path $InstallDir "deming.system.md"
 $skillsPath = Join-Path $InstallDir "skills"
+foreach ($requiredPath in @($soulPath, $systemPath)) {
+    if (-not (Test-Path $requiredPath -PathType Leaf)) { throw "Missing Deming file: $requiredPath" }
+}
+if (-not (Test-Path $skillsPath -PathType Container)) { throw "Missing Deming directory: $skillsPath" }
 $startMarker = "<!-- deming:start -->"
 $endMarker = "<!-- deming:end -->"
 $demingBlock = @"
@@ -50,16 +60,16 @@ Use the Deming skills from $skillsPath for Plan, Do, Study, and Act.
 $endMarker
 "@.Trim()
 
-$append = if (Test-Path $appendPath) { Get-Content $appendPath -Raw } else { "" }
+$append = if (Test-Path $appendPath) { Get-Content $appendPath -Raw -Encoding UTF8 } else { "" }
 $append = [regex]::Replace($append, "(?ms)<!-- deming:start -->.*?<!-- deming:end -->\s*", "").Trim()
 $append = if ($append) { "$append`r`n`r`n$demingBlock" } else { $demingBlock }
-Set-Content -Path $appendPath -Value "$append`r`n" -Encoding UTF8
 
 $settings = if (Test-Path $settingsPath) {
-    Get-Content $settingsPath -Raw | ConvertFrom-Json
+    Get-Content $settingsPath -Raw -Encoding UTF8 | ConvertFrom-Json
 } else {
     [pscustomobject]@{}
 }
+if ($settings -isnot [System.Management.Automation.PSCustomObject]) { throw "Pi settings must be a JSON object: $settingsPath" }
 
 $skills = @($settings.skills | Where-Object { $_ })
 if ($skills -notcontains $skillsPath) { $skills += $skillsPath }
@@ -68,22 +78,18 @@ if ($settings.PSObject.Properties.Name -contains "skills") {
 } else {
     $settings | Add-Member -NotePropertyName skills -NotePropertyValue $skills
 }
-$settings | ConvertTo-Json -Depth 10 | Set-Content -Path $settingsPath -Encoding UTF8
+$settingsJson = $settings | ConvertTo-Json -Depth 10
 
-$machinePath = [Environment]::GetEnvironmentVariable("Path", "Machine")
-$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
-$env:Path = "$machinePath;$userPath;$env:Path"
-if (-not (Get-Command pi -ErrorAction SilentlyContinue)) {
-    throw "Pi is not available after installation. Restart PowerShell and run this script again."
-}
-foreach ($requiredPath in @($soulPath, $systemPath, $skillsPath)) {
-    if (-not (Test-Path $requiredPath)) { throw "Missing Deming path: $requiredPath" }
-}
-$writtenSettings = Get-Content $settingsPath -Raw | ConvertFrom-Json
+# Validate and prepare both files before changing global configuration.
+New-Item -ItemType Directory -Force -Path $piDir | Out-Null
+Set-Content -Path $appendPath -Value "$append`r`n" -Encoding UTF8
+Set-Content -Path $settingsPath -Value $settingsJson -Encoding UTF8
+
+$writtenSettings = Get-Content $settingsPath -Raw -Encoding UTF8 | ConvertFrom-Json
 if (@($writtenSettings.skills) -notcontains $skillsPath) {
     throw "Pi settings do not contain the Deming skills path."
 }
-$writtenAppend = Get-Content $appendPath -Raw
+$writtenAppend = Get-Content $appendPath -Raw -Encoding UTF8
 foreach ($requiredPath in @($soulPath, $systemPath, $skillsPath)) {
     if ($writtenAppend -notmatch [regex]::Escape($requiredPath)) {
         throw "Pi append prompt does not contain: $requiredPath"
