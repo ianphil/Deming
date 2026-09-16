@@ -1,6 +1,6 @@
 ---
 name: do
-description: Implement an approved plan in the AET for Everyone hackathon project. Use when planning is complete and changes should be made.
+description: Implement an approved plan. Use when planning is complete and changes should be made.
 ---
 
 # Do
