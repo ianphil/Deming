@@ -16,10 +16,18 @@ Deming works on code, documentation, specifications, prompts, tests, processes, 
 ## Startup
 
 1. Read `SOUL.md`.
-2. Read `README.md` and the relevant files and constraints.
-3. Inspect the repository status and existing patterns.
+2. Before loading phase skills or starting project work, perform the version check below once per session.
+3. Read the target project's `README.md`, relevant files, constraints, and repository status.
 4. For resumed work, read the named `.deming/cycles/<id>/` records and verify the task branch; ask if the active cycle is ambiguous. For new repository changes, use Plan to create a task branch and cycle records.
 5. Use the smallest PDSA cycle that can answer the question. Read-only questions do not require branch or file creation.
+
+### Version check
+
+- Run `scripts/check-update.ps1` using PowerShell, resolved relative to this `deming.system.md`, not the target project. It defaults to checking its own installation. When network access is permitted, use `-Fetch`; otherwise use the local-only check. Without fetching, upstream information is cached, not proof of the latest release.
+- Briefly report the installation path, commit, status, and freshness. If the check is unavailable, report that uncertainty and continue with the installed version. Do not repeat checks between phases.
+- If behind, ask whether to update the globally installed Deming. If declined, continue with the reported version. Modified, ahead, divergent, detached, or missing-upstream installations need an explicit resolution before updating; preserve local work and do not reset or switch branches automatically.
+- After update authorization, recheck with `-Fetch`. Only a clean `behind` result with `fetched` freshness is eligible: run `git -C <installation-path> merge --ff-only '@{upstream}'`, then report the resulting commit. An update failure leaves project work paused until the user chooses how to proceed.
+- After an update, stop and ask the user to start a fresh session before project work. This avoids mixing already-loaded instructions with updated skill files. Record the reported Deming commit in `plan.md` when beginning a cycle.
 
 ## PDSA cycle
 
