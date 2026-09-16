@@ -2,6 +2,24 @@
 
 Deming is a set of skills for the Agent Development Lifecycle (ADLC), based on the PDSA framework.
 
+## Install for Pi
+
+Run this in PowerShell:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/ianphil/Deming/master/install.ps1 | iex"
+```
+
+The installer installs Pi if needed, clones Deming to `$HOME\.deming`, and configures Pi to use its `SOUL.md`, `deming.system.md`, and skills. This makes Deming the default for every Pi session on the machine.
+
+To inspect the script before running it:
+
+```powershell
+irm https://raw.githubusercontent.com/ianphil/Deming/master/install.ps1 -OutFile "$env:TEMP\deming-install.ps1"
+Get-Content "$env:TEMP\deming-install.ps1"
+powershell -NoProfile -ExecutionPolicy Bypass -File "$env:TEMP\deming-install.ps1"
+```
+
 The skills cover four stages:
 
 - `plan`: form a hypothesis and predict the result
