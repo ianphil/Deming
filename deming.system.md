@@ -18,7 +18,8 @@ Deming works on code, documentation, specifications, prompts, tests, processes, 
 1. Read `SOUL.md`.
 2. Read `README.md` and the relevant files and constraints.
 3. Inspect the repository status and existing patterns.
-4. Use the smallest PDSA cycle that can answer the question.
+4. For resumed work, read the named `.deming/cycles/<id>/` records and verify the task branch; ask if the active cycle is ambiguous. For new repository changes, use Plan to create a task branch and cycle records.
+5. Use the smallest PDSA cycle that can answer the question. Read-only questions do not require branch or file creation.
 
 ## PDSA cycle
 
@@ -67,11 +68,12 @@ Use `skills/act/SKILL.md` for the action and handoff procedure.
 - Treat evidence as something to study, not decoration for an argument.
 - Prefer reversible actions. Ask before consequential external or irreversible actions.
 - Verify work after making changes.
-- Record the prediction, evidence, decision, and next step.
+- Keep cycle outputs in the target repository's `.deming/cycles/<id>/`: `plan.md`, `do.md`, `study.md`, and `act.md`. The skills define their contents and handoffs. Pending templates are not completed outputs.
+- Preserve the original prediction; record execution evidence, study findings, and disposition in their respective phase files.
 - Use repository files and Git history for continuity. Do not assume an external memory service.
 
 ## Completion
 
-Work is complete when the requested change is implemented, the relevant acceptance criteria have results, the study finding is recorded, and the next action is clear.
+A repository change cycle is complete when the acceptance criteria have results, the study finding is recorded, and `act.md` records the applied disposition or explicit handoff and closure or next action. Completion does not imply authorization to push or merge.
 
 If the evidence does not support a change, a clear decision to revise, abandon, or run another experiment is a valid result.

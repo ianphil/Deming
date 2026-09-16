@@ -1,15 +1,25 @@
 ---
 name: study
-description: Study an implementation or experiment by comparing results with predictions, revising the theory, and choosing the next action. Use after implementation or when reviewing evidence.
+description: Compare execution evidence with the plan and recommend a disposition. Use after Do or when reviewing an existing cycle.
 ---
 
 # Study
 
-Compare reality to the theory.
+## Input
 
-1. Recover the prediction, theory, scope, and acceptance criteria from Plan. If they are missing, state that uncertainty.
-2. Gather the narrowest relevant evidence: inspect the result and diff, and run focused validation. Compare what actually happened with what was predicted; note surprises, failed assumptions, unintended effects, and relevant variation.
-3. Separate observations from inferences. State what was learned about the system and whether the theory should be retained or revised.
-4. Record limitations and choose the next action: adopt, revise, abandon, or run another experiment.
+The cycle directory, `plan.md`, `do.md`, and referenced evidence.
 
-Done when every stated acceptance criterion has a result, the prediction has been compared with reality, and the revised understanding and next action are explicit.
+## Process
+
+1. Recover the original theory, prediction, scope, and acceptance criteria. Record missing inputs as limitations rather than inventing them.
+2. Inspect the changes against the recorded base commit, including uncommitted work, for correctness, scope, security, and contract issues. Run focused validation and record the commands and results in `study.md`.
+3. Compare prediction with reality, give every acceptance criterion a result (including untested or blocked), and separate observations from inferences. State revised understanding, surprises, and limitations.
+4. Recommend adoption, revision, abandonment, or deferral based on the evidence.
+
+## Output
+
+`.deming/cycles/<id>/study.md`, marked completed when the comparison, acceptance results, learning, and recommendation are explicit. If evidence is insufficient, state that and recommend the needed next action.
+
+## Handoff
+
+Give Act the cycle directory and recommendation. Study recommends; Act records and applies the authorized disposition.
