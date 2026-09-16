@@ -12,6 +12,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubus
 
 The installer installs Pi if needed, clones Deming to `$HOME\.deming`, and configures Pi to use its `SOUL.md`, `deming.system.md`, and skills. This makes Deming the default for every Pi session on the machine.
 
+To update an existing installation:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File "$HOME\.deming\install.ps1"
+```
+
 To inspect the script before running it:
 
 ```powershell

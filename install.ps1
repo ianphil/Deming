@@ -70,6 +70,26 @@ if ($settings.PSObject.Properties.Name -contains "skills") {
 }
 $settings | ConvertTo-Json -Depth 10 | Set-Content -Path $settingsPath -Encoding UTF8
 
+$machinePath = [Environment]::GetEnvironmentVariable("Path", "Machine")
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+$env:Path = "$machinePath;$userPath;$env:Path"
+if (-not (Get-Command pi -ErrorAction SilentlyContinue)) {
+    throw "Pi is not available after installation. Restart PowerShell and run this script again."
+}
+foreach ($requiredPath in @($soulPath, $systemPath, $skillsPath)) {
+    if (-not (Test-Path $requiredPath)) { throw "Missing Deming path: $requiredPath" }
+}
+$writtenSettings = Get-Content $settingsPath -Raw | ConvertFrom-Json
+if (@($writtenSettings.skills) -notcontains $skillsPath) {
+    throw "Pi settings do not contain the Deming skills path."
+}
+$writtenAppend = Get-Content $appendPath -Raw
+foreach ($requiredPath in @($soulPath, $systemPath, $skillsPath)) {
+    if ($writtenAppend -notmatch [regex]::Escape($requiredPath)) {
+        throw "Pi append prompt does not contain: $requiredPath"
+    }
+}
+
 Write-Host "Deming is configured for Pi."
 Write-Host "Repository: $InstallDir"
 Write-Host "Restart Pi or run /reload."
