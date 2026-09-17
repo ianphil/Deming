@@ -1,0 +1,3 @@
+NOT FOR USE BY AGENTS, ONLY HUMANS!! DO NOT USE
+
+Hey Deming, I want to start a new project where we build an ADR management tool and UI. It should be a very simple CRUD app. A single-user browser-local prototype is the intended first slice. You may initialize local Git and make local commits. This is an unattended local trial: no remote fetch, push, PR, package installation, or global instruction changes. You may inspect installed tools and use isolated browser profiles for local testing. Follow your normal workflow; report blockers rather than inventing evidence.
