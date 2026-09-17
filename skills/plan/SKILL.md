@@ -1,6 +1,6 @@
 ---
 name: plan
-description: Plan a repository change or experiment and create its task branch and cycle records. Use after the startup version report, before changing code or documentation, or when resuming planning.
+description: Plan an explicitly selected PDSA cycle and create its task branch and cycle records. Use after Startup when the user chooses PDSA, or when resuming that cycle's planning.
 ---
 
 # Plan
@@ -11,13 +11,17 @@ The request, target repository, constraints, and any prior cycle's `act.md`.
 
 ## Process
 
+### Entry gate
+
+Apply `../../deming.system.md`'s Workflow choice gate first. Enter this procedure only for user-selected PDSA work after Startup. If reached for direct work or conversational planning, return to that path without cycle setup.
+
 ### Confirmation checkpoint
 
 Before planning, research relevant facts read-only, then restate the user's request in your own words in the conversation: the problem, desired outcome, scope, and material assumptions. Ask only clarifying questions whose answers could change the aim, scope, constraints, or non-goals; if there are none, say so. Research facts yourself rather than asking the user to look them up.
 
-Ask the user to confirm your understanding, then end the turn and wait for their explicit confirmation. This checkpoint always applies, including when there are no questions or the request is unattended. Without confirmation, remain paused: Git initialization, branch creation, cycle records, and implementation come afterward. A written `plan.md` or commentary followed by tool calls is not confirmation.
+Reuse explicit confirmation of unchanged scope already present in the conversation or cycle record, including when entering a new cycle; do not request it again. Selecting PDSA alone confirms the workflow, not an unstated scope. If scope confirmation is missing, ask the user to confirm your understanding, end the turn, and wait. Without confirmation, remain paused: Git initialization, branch creation, cycle records, and implementation come afterward, including in unattended requests. A written `plan.md` or the agent's own readiness statement is not confirmation.
 
-If answers or corrections change the understanding, restate it and obtain confirmation before proceeding. When resuming, reuse an explicit confirmation already present in the conversation or cycle record for unchanged scope; changed scope needs a new checkpoint.
+If answers or corrections change the scope, restate it and obtain confirmation before proceeding.
 
 ### After confirmation
 

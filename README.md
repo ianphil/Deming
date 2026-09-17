@@ -4,7 +4,9 @@ Deming is a set of agent instructions and skills for the Agent Development Lifec
 
 ## How it works
 
-The four skills ask the agent to predict what a change will do, make the change, and use the results to decide what to do next:
+Before a repository change, Deming asks whether to use a PDSA cycle or make the change directly, unless you have already chosen. Direct work means inspect, change, verify, and summarize—without cycle records or an automatic task branch. Read-only questions and planning discussions need neither a cycle nor a workflow question. The authoritative [workflow choice gate](deming.system.md#workflow-choice) defines selection and continuation.
+
+When you select PDSA, the four skills ask the agent to predict what a change will do, make the change, and use the results to decide what to do next:
 
 1. [Plan](skills/plan/SKILL.md). Define the goal, scope, and acceptance criteria. Predict the result and choose how to test it.
 2. [Do](skills/do/SKILL.md). Run the planned experiment without contaminating the learning.
@@ -15,7 +17,7 @@ The four skills ask the agent to predict what a change will do, make the change,
 
 ## Cycle records
 
-For a repository change, Plan starts a cycle in the target repository. For an explicitly requested new project in an empty directory outside another repository, Plan may initialize Git on `main` and make an empty baseline commit, recording that bootstrap in the plan. Pre-existing files or an existing unborn repository require an explicit baseline decision; the setup script never initializes or commits for you.
+For a user-selected PDSA change, Plan starts a cycle in the target repository after scope confirmation. For an explicitly requested new project in an empty directory outside another repository, Plan may initialize Git on `main` and make an empty baseline commit, recording that bootstrap in the plan. Pre-existing files or an existing unborn repository require an explicit baseline decision; the setup script never initializes or commits for you.
 
 Choose a lowercase cycle name and start from the intended base branch with a clean working tree and at least one commit. The script assigns the next three-digit number from existing local cycle records and `deming/*` refs:
 
@@ -125,6 +127,10 @@ pwsh -NoProfile -File tests\cycle.tests.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File tests\update.tests.ps1
 pwsh -NoProfile -File tests\update.tests.ps1
 ```
+
+### Workflow-choice evaluation
+
+Use the [workflow-choice regression scenarios](tests/workflow-choice.md) in fresh sessions with the candidate instructions to check direct work, choice prompts, and explicit or resumed PDSA. These are behavioral checks, not proof supplied by the PowerShell suites.
 
 ### Live Pi evaluation (opt-in)
 
