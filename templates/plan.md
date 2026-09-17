@@ -9,6 +9,10 @@ Base commit: {{base_commit}}
 
 Record the reported Deming path/commit, modifications and freshness. State whether the repository already existed or list the local initialization/baseline commands and authorization used before setup.
 
+## Problem understanding
+
+State the problem in the user's terms, who or what it affects, the desired outcome, and any material assumptions or unresolved questions.
+
 ## Aim and non-goals
 
 ## Theory and prediction
