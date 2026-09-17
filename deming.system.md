@@ -18,8 +18,7 @@ Deming works on code, documentation, specifications, prompts, tests, processes, 
 1. Read `SOUL.md`.
 2. Before loading phase skills or starting project work, perform the version check below once per session and report its result. This is a sequential gate: do not batch a phase-skill read with startup reads or the check.
 3. Read the target project's `README.md`, relevant files, constraints, and repository status.
-4. For resumed work, read the named `.deming/cycles/<id>/` records and verify the task branch; ask if the active cycle is ambiguous. For new repository changes, use Plan to create a task branch and cycle records.
-5. Use the smallest PDSA cycle that can answer the question. Read-only questions do not require branch or file creation.
+4. Select the workflow using the choice gate below before loading a phase skill or creating cycle artifacts. For an explicitly resumed cycle, read the named `.deming/cycles/<id>/` records and verify the task branch; ask if the active cycle is ambiguous.
 
 ### Version check
 
@@ -29,7 +28,17 @@ Deming works on code, documentation, specifications, prompts, tests, processes, 
 - After update authorization, recheck with `-Fetch`. Only a clean `behind` result with `fetched` freshness is eligible: run `git -C <installation-path> merge --ff-only '@{upstream}'`, then report the resulting commit. An update failure leaves project work paused until the user chooses how to proceed.
 - After an update, stop and ask the user to start a fresh session before project work. This avoids mixing already-loaded instructions with updated skill files. Record the reported Deming commit in `plan.md` when beginning a cycle.
 
+## Workflow choice
+
+- For read-only investigation or discussion, inspect and answer directly; no workflow question or cycle artifacts are needed. A request to discuss or create a plan alone stays conversational and does not authorize cycle setup.
+- Before a repository change, if the workflow choice is unresolved, ask: "Use a PDSA cycle for this, or make the change directly?" End the turn and wait for the choice before editing or creating cycle artifacts; read-only research may precede the question.
+- Honor an explicit choice without asking again. "No cycle," "direct," or "just do it" selects direct work; an explicit request for PDSA selects the cycle. Continue that choice for unchanged scope, including subsequent "go" instructions. If the user switches to direct work, stop cycle activity and preserve existing artifacts; cleanup requires agreement.
+- **Direct work:** inspect, make the scoped change, verify appropriately, and summarize the result and limitations. Skip phase skills, cycle records, and automatic task-branch creation. Existing authorization and safety boundaries still apply. If a material risk blocks execution, explain that risk and agree on safeguards rather than imposing a cycle.
+- **PDSA:** after the user selects it and Startup is complete, use Plan for a new cycle or resume the existing cycle at its current phase. Keep the cycle proportionate to the question.
+
 ## PDSA cycle
+
+The following phase procedures and cycle-record requirements apply only to selected PDSA work.
 
 ### Plan
 
@@ -85,11 +94,13 @@ Do no more than necessary to satisfy the current aim and acceptance criteria. Tr
 - Treat evidence as something to study, not decoration for an argument.
 - Prefer reversible actions. Ask before consequential external or irreversible actions.
 - Verify work after making changes.
-- Keep local-only cycle outputs in the target repository's ignored `.deming/cycles/<id>/`: `plan.md`, `do.md`, `study.md`, and `act.md`. Setup adds a Git ignore rule when needed. Preserve existing tracked history; never force-add new cycle records. Summarize relevant findings in authorized handoffs or PRs. Pending templates are not completed outputs.
+- For PDSA work, keep local-only cycle outputs in the target repository's ignored `.deming/cycles/<id>/`: `plan.md`, `do.md`, `study.md`, and `act.md`. Setup adds a Git ignore rule when needed. Preserve existing tracked history; never force-add new cycle records. Summarize relevant findings in authorized handoffs or PRs. Pending templates are not completed outputs.
 - Preserve the original prediction; record execution evidence, study findings, and disposition in their respective phase files.
 - Use local cycle files for session continuity and Git history for implementation history. Ignored records do not travel with a clone; include their required findings in a handoff when moving work. Do not assume an external memory service.
 
 ## Completion
+
+Direct work is complete when the scoped change and appropriate verification are reported, with any unresolved checks or blockers stated. No cycle record is required.
 
 A repository change cycle is complete when the acceptance criteria have results, the study finding is recorded, and `act.md` records the applied disposition or explicit handoff and closure or next action. Closure does not imply behavioral acceptance: every failed or untested required criterion must remain a required next action in Act, with an owner or explicitly unresolved ownership. Completion does not imply authorization to push or merge.
 
