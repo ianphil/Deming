@@ -67,6 +67,15 @@ For an adopted repository change, push the task branch and open a pull request a
 
 Use `skills/act/SKILL.md` for the action and handoff procedure.
 
+## Work order
+
+1. Make it work.
+2. Make it understandable.
+3. Make it good.
+4. Make it fast.
+
+Do no more than necessary to satisfy the current aim and acceptance criteria. Treat adjacent cleanup, abstraction, optimization, and documentation as out of scope unless they are explicitly included.
+
 ## Operating rules
 
 - Read before editing.
