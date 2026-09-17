@@ -15,7 +15,9 @@ The four skills ask the agent to predict what a change will do, make the change,
 
 ## Cycle records
 
-For a repository change, Plan starts a cycle in the target repository. Choose an unused ID and start from the intended base branch with a clean working tree and at least one commit:
+For a repository change, Plan starts a cycle in the target repository. For an explicitly requested new project in an empty directory outside another repository, Plan may initialize Git on `main` and make an empty baseline commit, recording that bootstrap in the plan. Pre-existing files or an existing unborn repository require an explicit baseline decision; the setup script never initializes or commits for you.
+
+Choose an unused ID and start from the intended base branch with a clean working tree and at least one commit:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File "$HOME\.deming\scripts\start-cycle.ps1" -Cycle 001-adr-crud -Repo C:\src\adr-ui
@@ -32,9 +34,11 @@ adr-ui/
     └── act.md
 ```
 
-The files begin as pending scaffolds, not completed phase outputs. Plan fills `plan.md`; Do consumes it and fills `do.md`; Study consumes both and fills `study.md`; Act records the disposition in `act.md`. Resume by giving Deming the existing cycle directory, not by rerunning setup. Keep these records with the application changes on the task branch.
+The files begin as pending scaffolds, not completed phase outputs. Plan fills `plan.md`; Do consumes it and fills `do.md`; Study consumes both and fills `study.md`; Act records the disposition in `act.md`. Resume by giving Deming the existing cycle directory, not by rerunning setup. Records are local-only and ignored: setup adds `/.deming/` to `.gitignore` when needed. Commit the ignore rule with the application changes, not the records. Existing tracked history is preserved. Ignored records support local session recovery but do not travel with a clone; summarize necessary evidence and decisions in the authorized PR or handoff.
 
-Setup refuses dirty repositories, detached HEADs, ignored cycle paths, and existing cycle directories or task branches. It does not commit, push, or merge. If writing fails after branch creation, inspect the retained branch and partial files before proceeding.
+Setup accepts ignored cycle paths and refuses dirty repositories, detached HEADs, and existing cycle directories or task branches. It does not commit, push, or merge. If writing fails after branch creation, inspect the retained branch and partial files before proceeding.
+
+Cycle closure is separate from accepting behavior. Study records passed, failed, or untested criteria with their evidence; Act carries every unresolved required criterion into an explicit required handoff. An HTTP response or a mock-storage test is not proof that the browser UI works.
 
 ## Install for Pi
 
@@ -121,5 +125,17 @@ pwsh -NoProfile -File tests\cycle.tests.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File tests\update.tests.ps1
 pwsh -NoProfile -File tests\update.tests.ps1
 ```
+
+### Live Pi evaluation (opt-in)
+
+`tests/pi-e2e.ps1` runs a real `pi -p --mode json` session using your existing provider credentials. It consumes model tokens. Supply an **empty** target directory and a new evidence directory outside the target; the harness never deletes a project:
+
+```powershell
+pwsh -NoProfile -File tests\pi-e2e.ps1 -Repo C:\src\adr-ui -EvidenceDir C:\src\Deming\.deming\e2e-run-01
+```
+
+The harness uses the candidate checkout's installer instructions and skills in a temporary isolated Pi configuration, preserves sessions and candidate hashes, and removes its temporary credential copy afterward. It does not update the global installation. The trial permits local Git bootstrap/commits and browser testing, but not remote fetches, publishing, package installation, or global changes.
+
+A successful Pi exit is **not** a passing evaluation. Inspect the saved session for startup ordering, bootstrap, phase handoffs, ignored records, real browser evidence, and required follow-up in Act. Independently rerun generated checks. Keep failed trials and interventions in the parent cycle's Study record.
 
 The checks use temporary configuration and repositories. Installer checks replace Pi installation and network updates with test functions and leave your real Pi configuration untouched. Cycle checks exercise branch creation, template rendering, and refusal of unsafe or conflicting setup requests without network access. Update checks use local Git repositories to exercise version reporting and fetch failures; they do not contact GitHub or change the installed Deming.

@@ -92,7 +92,17 @@ try {
     New-Item -ItemType Directory -Path $scripts | Out-Null
     Copy-Item $check (Join-Path $scripts 'check-update.ps1')
     Push-Location $seed
-    try { $report = & (Join-Path $scripts 'check-update.ps1') } finally { Pop-Location }
+    try {
+        $scriptPath = Join-Path $scripts 'check-update.ps1'
+        $report = & $scriptPath
+        $shellName = if ($PSVersionTable.PSVersion.Major -eq 5) { 'powershell.exe' } else { 'pwsh.exe' }
+        $shell = Join-Path $PSHOME $shellName
+        $output = (& $shell -NoProfile -ExecutionPolicy Bypass -File $scriptPath | Out-String)
+        Assert ($LASTEXITCODE -eq 0) 'Child -File invocation failed'
+        Assert (($output -replace '\s', '').Contains(($install -replace '\s', '')) -and $output.Contains((Run-Git $install rev-parse HEAD))) 'Child -File default did not identify its installation'
+        $output = (& $shell -NoProfile -ExecutionPolicy Bypass -File $scriptPath -InstallDir $seed | Out-String)
+        Assert ($LASTEXITCODE -eq 0 -and ($output -replace '\s', '').Contains(($seed -replace '\s', '')) -and $output.Contains((Run-Git $seed rev-parse HEAD))) 'Child -File ignored explicit InstallDir'
+    } finally { Pop-Location }
     Assert ($report.Path -eq $install -and $report.Commit -eq (Run-Git $install rev-parse HEAD)) 'Default check used the target project instead of its installation'
     Write-Host "PASS: $script:checks checks on PowerShell $($PSVersionTable.PSVersion)."
 } finally {
