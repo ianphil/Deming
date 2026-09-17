@@ -17,17 +17,17 @@ The four skills ask the agent to predict what a change will do, make the change,
 
 For a repository change, Plan starts a cycle in the target repository. For an explicitly requested new project in an empty directory outside another repository, Plan may initialize Git on `main` and make an empty baseline commit, recording that bootstrap in the plan. Pre-existing files or an existing unborn repository require an explicit baseline decision; the setup script never initializes or commits for you.
 
-Choose an unused ID and start from the intended base branch with a clean working tree and at least one commit:
+Choose a lowercase cycle name and start from the intended base branch with a clean working tree and at least one commit. The script assigns the next three-digit number from existing local cycle records and `deming/*` refs:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File "$HOME\.deming\scripts\start-cycle.ps1" -Cycle 001-adr-crud -Repo C:\src\adr-ui
+powershell -NoProfile -ExecutionPolicy Bypass -File "$HOME\.deming\scripts\start-cycle.ps1" -Name adr-crud -Repo C:\src\adr-ui
 ```
 
-Use your actual Deming installation path if different. The script creates and checks out `deming/001-adr-crud` from the current branch, then copies four templates:
+Use your actual Deming installation path if different. If the next number is `001`, the script creates and checks out `deming/001-adr-crud`; if local history already reaches `003`, it creates `deming/004-adr-crud`. It then copies four templates:
 
 ```text
 adr-ui/
-└── .deming/cycles/001-adr-crud/
+└── .deming/cycles/004-adr-crud/
     ├── plan.md
     ├── do.md
     ├── study.md

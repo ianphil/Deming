@@ -1,8 +1,8 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
-    [ValidatePattern('^[0-9]+-[a-z0-9]+(-[a-z0-9]+)*$')]
-    [string]$Cycle,
+    [ValidatePattern('(?-i)^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$')]
+    [string]$Name,
     [string]$Repo = '.'
 )
 
@@ -19,12 +19,40 @@ $baseBranch = (Invoke-Git symbolic-ref --quiet --short HEAD).Trim()
 $baseCommit = (Invoke-Git rev-parse --verify HEAD).Trim()
 if (Invoke-Git status --porcelain) { throw 'Working tree must be clean before starting a cycle.' }
 
-$branch = "deming/$Cycle"
-$relativePath = ".deming/cycles/$Cycle"
-$cyclePath = Join-Path $Repo $relativePath
-if (Test-Path $cyclePath) { throw "Cycle already exists: $cyclePath" }
-$branches = @(Invoke-Git for-each-ref --format='%(refname:short)' refs/heads/)
-if ($branches -contains $branch) { throw "Branch already exists: $branch" }
+$localBranches = @(Invoke-Git for-each-ref --format='%(refname:short)' refs/heads/)
+$allRefs = @(Invoke-Git for-each-ref --format='%(refname:short)' refs/heads/ refs/remotes/)
+$usedNumbers = @()
+foreach ($ref in $allRefs) {
+    if ($ref -match '(?:^|/)deming/([0-9]+)-') {
+        $usedNumbers += [int]$Matches[1]
+    }
+}
+
+$cycleRoot = Join-Path $Repo '.deming\cycles'
+if (Test-Path $cycleRoot) {
+    foreach ($directory in Get-ChildItem -LiteralPath $cycleRoot -Directory) {
+        if ($directory.Name -match '^([0-9]+)-') {
+            $usedNumbers += [int]$Matches[1]
+        }
+    }
+}
+
+$nextNumber = 1
+if ($usedNumbers.Count -gt 0) {
+    $nextNumber = [int](($usedNumbers | Measure-Object -Maximum).Maximum) + 1
+}
+do {
+    $Cycle = '{0:D3}-{1}' -f $nextNumber, $Name
+    $branch = "deming/$Cycle"
+    $relativePath = ".deming/cycles/$Cycle"
+    $cyclePath = Join-Path $Repo $relativePath
+    if (($localBranches -contains $branch) -or (Test-Path $cyclePath)) {
+        $nextNumber++
+        continue
+    }
+    break
+} while ($true)
+
 # Cycle records are local-only. Respect existing ignore rules; add one if needed.
 $needsIgnore = $false
 foreach ($phase in @('plan', 'do', 'study', 'act')) {
