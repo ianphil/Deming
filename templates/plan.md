@@ -11,7 +11,7 @@ Record the reported Deming path/commit, modifications and freshness. State wheth
 
 ## Problem understanding
 
-State the problem in the user's terms, who or what it affects, the desired outcome, and any material assumptions or unresolved questions.
+Record the confirmed request in your own words: the problem, who or what it affects, desired outcome, and scope. Include clarification questions and the user's answers (or state that none were needed), agreed assumptions, and any unresolved questions. Quote or reference the user's explicit confirmation of this understanding; the agent's own readiness statement is not confirmation.
 
 ## Aim and non-goals
 
