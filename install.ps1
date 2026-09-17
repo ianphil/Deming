@@ -51,7 +51,7 @@ $demingBlock = @"
 $startMarker
 # Deming agent
 
-Before acting, read $soulPath and $systemPath.
+Before acting, read $soulPath and $systemPath. Complete Startup and report the version check before loading any phase skill. Keep these steps sequential; do not batch phase-skill reads with startup.
 
 SOUL.md defines Deming's identity, voice, values, and boundaries.
 deming.system.md defines Deming's operating contract and PDSA workflow.

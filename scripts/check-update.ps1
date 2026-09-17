@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$InstallDir = (Split-Path $PSScriptRoot -Parent),
+    [string]$InstallDir,
     [switch]$Fetch
 )
 
@@ -24,6 +24,7 @@ function Invoke-DemingGit {
 }
 
 try {
+    if (-not $InstallDir) { $InstallDir = Split-Path $PSScriptRoot -Parent }
     $InstallDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($InstallDir)
     $report.Path = $InstallDir
     $root = Invoke-DemingGit rev-parse --show-toplevel

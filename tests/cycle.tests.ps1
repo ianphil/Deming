@@ -54,6 +54,8 @@ try {
         $expected = $template.Replace('{{cycle}}', '001-crud').Replace('{{branch}}', 'deming/001-crud').Replace('{{base_branch}}', 'main').Replace('{{base_commit}}', $base)
         Assert ($text -ceq $expected) "Template not rendered correctly: $phase"
         Assert ($text -match 'Status: pending') "Scaffold falsely marked complete: $phase"
+        & $gitExe -C $repo check-ignore --quiet -- ".deming/cycles/001-crud/$phase.md"
+        Assert ($LASTEXITCODE -eq 0) "Cycle record is not local-only: $phase"
     }
     Assert-Refusal 002-dirty 'Dirty working tree accepted'
     Run-Git add .
@@ -65,15 +67,14 @@ try {
     $existing = Join-Path $repo '.deming\cycles\004-existing'
     New-Item -ItemType Directory -Path $existing | Out-Null
     [IO.File]::WriteAllText((Join-Path $existing 'plan.md'), 'Existing work', $utf8)
-    Run-Git add .
-    Run-Git commit --quiet -m 'Existing cycle record'
     Assert-Refusal 004-existing 'Existing directory accepted'
     Assert ([IO.File]::ReadAllText((Join-Path $existing 'plan.md')) -ceq 'Existing work') 'Existing record overwritten'
-    [IO.File]::WriteAllText((Join-Path $repo '.gitignore'), ".deming/cycles/005-ignored/`n.deming/cycles/008-ignored-file/study.md`n", $utf8)
-    Run-Git add .
-    Run-Git commit --quiet -m 'Ignore a cycle path'
-    Assert-Refusal 005-ignored 'Ignored cycle path accepted'
-    Assert-Refusal 008-ignored-file 'Ignored phase file accepted'
+    $ignoreBefore = [IO.File]::ReadAllText((Join-Path $repo '.gitignore'))
+    & $setup -Cycle 005-ignored -Repo $repo
+    Assert ((Run-Git branch --show-current) -eq 'deming/005-ignored') 'Ignored cycle could not start'
+    Assert (-not (Run-Git status --porcelain)) 'Local records dirtied the working tree'
+    Assert ([IO.File]::ReadAllText((Join-Path $repo '.gitignore')) -ceq $ignoreBefore) 'Setup duplicated an existing ignore rule'
+    Assert (-not (Run-Git ls-files .deming)) 'Cycle records were tracked'
     $brokenInstall = Join-Path $root 'incomplete-deming'
     New-Item -ItemType Directory -Path (Join-Path $brokenInstall 'scripts') | Out-Null
     Copy-Item $setup (Join-Path $brokenInstall 'scripts\start-cycle.ps1')

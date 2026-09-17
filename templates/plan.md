@@ -5,6 +5,10 @@ Branch: {{branch}}
 Base branch: {{base_branch}}
 Base commit: {{base_commit}}
 
+## Provenance and repository bootstrap
+
+Record the reported Deming path/commit, modifications and freshness. State whether the repository already existed or list the local initialization/baseline commands and authorization used before setup.
+
 ## Aim and non-goals
 
 ## Theory and prediction
