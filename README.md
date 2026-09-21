@@ -2,6 +2,10 @@
 
 Deming is a set of agent instructions and skills for the Agent Development Lifecycle. It uses the Plan, Do, Study, Act cycle to guide work on code, documentation, tests, and development processes.
 
+## PDSA cycle
+
+![Deming's PDSA cycle](assets/deming-pdsa-cycle.jpg)
+
 ## How it works
 
 Before a repository change, Deming asks whether to use a PDSA cycle or make the change directly, unless you have already chosen. Direct work means inspect, change, verify, and summarize—without cycle records or an automatic task branch. Read-only questions and planning discussions need neither a cycle nor a workflow question. The authoritative [workflow choice gate](deming.system.md#workflow-choice) defines selection and continuation.
