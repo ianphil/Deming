@@ -11,6 +11,7 @@ Create one browser-readable implementation plan for the engineer, team, and exec
 
 1. Apply [Workflow choice](../../deming.system.md#workflow-choice) after Startup. A user-supplied task spec explicitly selecting PDSA resolves the workflow question. Direct work and conversational planning stay on their paths without cycle setup.
 2. Read the request/spec, README, relevant code/tests, repository status, project agent/application documentation (including `AI_DOCS/` and `APP_DOCS/` when present), and prior cycle's Act record if supplied. Research facts rather than asking the user to look them up. If no actionable request can be recovered, ask for it and pause.
+   For an agreed Spec draft, treat the document as requirements input: preserve its confirmed scope, explicit non-goals, deferred decisions, and selected workflow while translating its definition of done into an implementation plan. A draft under discussion or a request to review a spec is not an implementation request and does not enter Plan.
 3. Restate the problem, desired outcome, scope, non-goals, and material assumptions. Ask only questions that could change them; otherwise say none remain. Reuse explicit confirmation of unchanged scope already in the conversation or cycle. Workflow selection alone is not scope confirmation. If missing, ask for confirmation, end the turn, and wait before setup or implementation. An agent-authored plan is not confirmation.
 
 ## Choose the planning operation

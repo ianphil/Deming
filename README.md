@@ -8,9 +8,19 @@ Deming is a set of agent instructions and skills for the Agent Development Lifec
 
 ## How it works
 
-Before a repository change, Deming asks whether to use a PDSA cycle or make the change directly, unless you have already chosen. A user-provided task spec explicitly requiring PDSA counts as that choice; it does not replace scope confirmation. Reviewing a spec or merely mentioning PDSA does not authorize a cycle, and a later explicit direct choice overrides the spec. Direct work means inspect, change, verify, and summarize—without cycle records or an automatic task branch. Read-only questions and planning discussions need neither a cycle nor a workflow question. The authoritative [workflow choice gate](deming.system.md#workflow-choice) defines selection and continuation.
+Before an implementation change, Deming reads the supplied task spec and asks whether to use a PDSA cycle or make the change directly only if you have not already chosen. Explicit spec drafting follows the separate path below. A user-provided task spec explicitly requiring PDSA counts as that choice; it does not replace scope confirmation. Reviewing a spec or merely mentioning PDSA does not authorize a cycle, and a later explicit direct choice overrides the spec. Direct work means inspect, change, verify, and summarize—without cycle records or an automatic task branch. Read-only questions and planning discussions need neither a cycle nor a workflow question. The authoritative [workflow choice gate](deming.system.md#workflow-choice) defines selection and continuation.
 
-When you select PDSA, the four skills ask the agent to predict what a change will do, make the change, and use the results to decide what to do next:
+## Spec sessions
+
+Use the built-in [Spec skill](skills/spec/SKILL.md) when you want to turn an idea into a focused, editable requirements draft before implementation, for example: “Let's do a spec session for …”. Deming researches facts from the project, interviews material decisions in dependent rounds, writes an early `specs/<descriptive-name>.md` draft from [the Spec template](templates/spec.md), and hands the file to VS Code when the `code` CLI is available. It preserves existing drafts and user edits, and reports a path-based fallback when an editor is unavailable.
+
+A spec session is a collaboration surface, not a PDSA cycle or implementation approval. “This spec looks right” confirms the requirements; “implement it” is a separate authorization. At that point, an explicitly selected workflow uses Direct work or the existing PDSA path, whose Plan phase consumes the agreed spec and creates the HTML implementation plan. Proposed or illustrative PDSA text in a draft cannot start a cycle by itself. Specs are normal project artifacts; ignored `.deming/cycles/` records remain separate.
+
+The template retains **How You Are Graded** for meaningful rubrics: user-selected weights, partial-credit rules, and hard failures. Recommendations stay proposals until you adopt them. Review-only requests remain read-only; drafting/refinement allows scoped spec edits. Unchanged confirmed scope and a user-adopted workflow carry forward without another approval loop.
+
+### Implementation through PDSA
+
+When you select PDSA, the four phase skills ask the agent to predict what a change will do, make the change, and use the results to decide what to do next:
 
 1. [Plan](skills/plan/SKILL.md). Create an HTML implementation plan: purpose/problem/solution, prediction, scope, acceptance criteria, ordered tasks, phase testing strategies, and useful validated diagrams.
 2. [Do](skills/do/SKILL.md). Execute that plan phase by phase, update its checklist, run phase and global validation, and record evidence without rewriting the original prediction.
@@ -152,11 +162,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tests\plan-artifacts.tests.p
 pwsh -NoProfile -File tests\plan-artifacts.tests.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File tests\update.tests.ps1
 pwsh -NoProfile -File tests\update.tests.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File tests\spec-skill.tests.ps1
+pwsh -NoProfile -File tests\spec-skill.tests.ps1
 ```
 
 ### Workflow-choice and HTML-plan evaluation
 
-Use the [workflow-choice regression scenarios](tests/workflow-choice.md) in fresh sessions with the candidate instructions to check direct work, choice prompts, task-spec approval, HTML planning/diagrams, ordered Do execution, and explicit or resumed PDSA. These are behavioral checks, not proof supplied by the PowerShell suites.
+Use the [workflow-choice regression scenarios](tests/workflow-choice.md) in fresh sessions with the candidate instructions to check direct work, choice prompts, task-spec approval, HTML planning/diagrams, ordered Do execution, explicit or resumed PDSA, and collaborative Spec sessions (cases 17 onward). The Spec suite checks document structure and local references, not model behavior. These are behavioral checks, not proof supplied by the PowerShell suites.
 
 ### Live Pi evaluation (opt-in)
 

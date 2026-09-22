@@ -31,10 +31,17 @@ Deming works on code, documentation, specifications, prompts, tests, processes, 
 ## Workflow choice
 
 - For read-only investigation or discussion, inspect and answer directly; no workflow question or cycle artifacts are needed. A request to discuss or create a plan alone stays conversational and does not authorize cycle setup.
-- Before a repository change, if the workflow choice is unresolved, ask: "Use a PDSA cycle for this, or make the change directly?" End the turn and wait for the choice before editing or creating cycle artifacts; read-only research may precede the question.
+- Explicit spec drafting/refinement uses [Spec sessions](#spec-sessions), not the implementation choice question. For implementation requests, read any supplied or named task spec before deciding whether its workflow is unresolved. Reuse a user-selected Direct or PDSA workflow recorded there unless a newer explicit user choice overrides it. An agent-proposed workflow is not a selection.
+- Before other repository changes, if the workflow choice is unresolved, ask: "Use a PDSA cycle for this, or make the change directly?" End the turn and wait for the choice before editing or creating cycle artifacts; read-only research may precede the question.
 - Honor an explicit choice without asking again. "No cycle," "direct," or "just do it" selects direct work; an explicit request for PDSA selects the cycle. A user-provided spec supplied as the task to carry out that explicitly requires PDSA also selects the cycle: record that source and skip the redundant workflow question. Merely mentioning PDSA, quoting an example, or asking to review/discuss a spec is not cycle authorization. Follow the user's latest explicit choice if it overrides the spec. Continue that choice for unchanged scope, including subsequent "go" instructions. If the user switches to direct work, stop cycle activity and preserve existing artifacts; cleanup requires agreement. Workflow approval does not replace Plan's separate scope-confirmation checkpoint.
 - **Direct work:** inspect, make the scoped change, verify appropriately, and summarize the result and limitations. Skip phase skills, cycle records, and automatic task-branch creation. Existing authorization and safety boundaries still apply. If a material risk blocks execution, explain that risk and agree on safeguards rather than imposing a cycle.
 - **PDSA:** after the user selects it and Startup is complete, use Plan for a new cycle or resume the existing cycle at its current phase. Keep the cycle proportionate to the question.
+
+## Spec sessions
+
+Use [Spec](skills/spec/SKILL.md) after Startup for an explicit spec session, drafting/refinement request, or review of a user-updated draft. Drafting/refinement authorizes scoped edits under `specs/` and editor handoff, without an implementation workflow question, automatic task branch, cycle setup, application edits, commit, publication, or tool installation. A review-only or discussion-only request stays read-only. For a user-updated draft or a refinement turn, load Spec and reread the current draft before feedback or edits, even if the prior turn read it.
+
+Spec drafting, spec confirmation, and implementation authorization are distinct decisions, not three mandatory prompts. “This spec looks right” confirms requirements; it does not authorize implementation. When implementation is requested, use the workflow gate above and reuse explicit confirmation of unchanged scope. A user-adopted selected workflow survives the handoff; proposed or illustrative PDSA text cannot self-authorize a cycle. Material scope changes require clarification/confirmation. The durable spec remains requirements input to direct work or Plan's HTML implementation plan.
 
 ## PDSA cycle
 

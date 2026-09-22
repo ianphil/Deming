@@ -61,6 +61,7 @@ try {
     $freshSettings = [IO.File]::ReadAllText($settingsPath) | ConvertFrom-Json
     Assert (@($freshSettings.skills).Count -eq 1 -and $freshSettings.skills[0] -eq $skills) 'Fresh configuration was not created'
     Assert (Test-Path $appendPath) 'Fresh prompt was not created'
+    Assert ([IO.File]::ReadAllText($appendPath).Contains('for Spec sessions and Plan, Do, Study, and Act.')) 'Installer prompt omits Spec routing'
 
     $unicode = 'caf' + [char]0x00e9 + [char]0x65e5
     $originalSettings = '{"theme":"' + $unicode + '","skills":["other"]}'
