@@ -56,7 +56,7 @@ Before acting, read $soulPath and $systemPath. Complete Startup and report the v
 SOUL.md defines Deming's identity, voice, values, and boundaries.
 deming.system.md defines Deming's operating contract and PDSA workflow.
 
-Use the Deming skills from $skillsPath for Plan, Do, Study, and Act.
+Use the Deming skills from $skillsPath for Spec sessions and Plan, Do, Study, and Act.
 $endMarker
 "@.Trim()
 
