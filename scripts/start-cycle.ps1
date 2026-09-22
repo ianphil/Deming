@@ -55,8 +55,9 @@ do {
 
 # Cycle records are local-only. Respect existing ignore rules; add one if needed.
 $needsIgnore = $false
-foreach ($phase in @('plan', 'do', 'study', 'act')) {
-    & git -C $Repo check-ignore --quiet -- "$relativePath/$phase.md"
+$recordFiles = @('plan.html', 'do.md', 'study.md', 'act.md')
+foreach ($file in ($recordFiles + @('diagrams/probe.html', 'diagrams/probe.svg'))) {
+    & git -C $Repo check-ignore --quiet -- "$relativePath/$file"
     if ($LASTEXITCODE -eq 1) { $needsIgnore = $true }
     elseif ($LASTEXITCODE -ne 0) { throw 'Could not check Git ignore rules.' }
 }
@@ -64,9 +65,15 @@ foreach ($phase in @('plan', 'do', 'study', 'act')) {
 # Read every template before creating the branch or writing project files.
 $templateDir = Join-Path (Split-Path $PSScriptRoot -Parent) 'templates'
 $documents = @{}
-foreach ($phase in @('plan', 'do', 'study', 'act')) {
-    $text = Get-Content (Join-Path $templateDir "$phase.md") -Raw -Encoding UTF8
-    $documents[$phase] = $text.Replace('{{cycle}}', $Cycle).Replace('{{branch}}', $branch).Replace('{{base_branch}}', $baseBranch).Replace('{{base_commit}}', $baseCommit)
+foreach ($file in $recordFiles) {
+    $text = Get-Content (Join-Path $templateDir $file) -Raw -Encoding UTF8
+    $values = @{ cycle = $Cycle; branch = $branch; base_branch = $baseBranch; base_commit = $baseCommit }
+    foreach ($key in $values.Keys) {
+        $value = $values[$key]
+        if ($file.EndsWith('.html')) { $value = [System.Net.WebUtility]::HtmlEncode($value) }
+        $text = $text.Replace("{{$key}}", $value)
+    }
+    $documents[$file] = $text
 }
 
 Invoke-Git switch -c $branch
@@ -76,9 +83,9 @@ if ($needsIgnore) {
     [IO.File]::AppendAllText((Join-Path $Repo '.gitignore'), "`n/.deming/`n", $utf8)
 }
 New-Item -ItemType Directory -Path $cyclePath | Out-Null
-foreach ($phase in @('plan', 'do', 'study', 'act')) {
-    [IO.File]::WriteAllText((Join-Path $cyclePath "$phase.md"), $documents[$phase], $utf8)
+foreach ($file in $recordFiles) {
+    [IO.File]::WriteAllText((Join-Path $cyclePath $file), $documents[$file], $utf8)
 }
 Write-Host "Created $branch from $baseBranch ($baseCommit)."
 Write-Host "Cycle records: $cyclePath"
-Write-Host 'Fill plan.md first. No files were committed or pushed.'
+Write-Host 'Fill plan.html first; keep diagram sources and SVGs in diagrams/. No files were committed or pushed.'

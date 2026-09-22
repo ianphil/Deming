@@ -48,14 +48,15 @@ try {
     Assert ((Run-Git rev-parse HEAD) -eq $base) 'Setup created a commit or changed the base'
     $cycle = Join-Path $repo '.deming\cycles\001-crud'
     Assert (@(Get-ChildItem $cycle).Count -eq 4) 'Expected exactly four phase files'
-    foreach ($phase in @('plan', 'do', 'study', 'act')) {
-        $text = [IO.File]::ReadAllText((Join-Path $cycle "$phase.md"))
-        $template = [IO.File]::ReadAllText((Join-Path $source "templates\$phase.md"))
+    Assert (-not (Test-Path (Join-Path $cycle 'plan.md'))) 'New cycle created a Markdown plan'
+    foreach ($file in @('plan.html', 'do.md', 'study.md', 'act.md')) {
+        $text = [IO.File]::ReadAllText((Join-Path $cycle $file))
+        $template = [IO.File]::ReadAllText((Join-Path $source "templates\$file"))
         $expected = $template.Replace('{{cycle}}', '001-crud').Replace('{{branch}}', 'deming/001-crud').Replace('{{base_branch}}', 'main').Replace('{{base_commit}}', $base)
-        Assert ($text -ceq $expected) "Template not rendered correctly: $phase"
-        Assert ($text -match 'Status: pending') "Scaffold falsely marked complete: $phase"
-        & $gitExe -C $repo check-ignore --quiet -- ".deming/cycles/001-crud/$phase.md"
-        Assert ($LASTEXITCODE -eq 0) "Cycle record is not local-only: $phase"
+        Assert ($text -ceq $expected) "Template not rendered correctly: $file"
+        Assert ($text -match 'Status: pending') "Scaffold falsely marked complete: $file"
+        & $gitExe -C $repo check-ignore --quiet -- ".deming/cycles/001-crud/$file"
+        Assert ($LASTEXITCODE -eq 0) "Cycle record is not local-only: $file"
     }
     Assert-Refusal dirty 'Dirty working tree accepted'
     Run-Git add .
@@ -75,6 +76,14 @@ try {
     & $setup -Name after-branch -Repo $repo
     Assert ((Run-Git branch --show-current) -eq 'deming/006-after-branch') 'Did not account for existing branch numbers'
     Assert (-not (Run-Git status --porcelain)) 'Second local cycle dirtied the working tree'
+
+    Run-Git switch -c 'feature/a&b'
+    & $setup -Name escaped -Repo $repo
+    $html = [IO.File]::ReadAllText((Join-Path $repo '.deming\cycles\007-escaped\plan.html'))
+    Assert ($html.Contains('feature/a&amp;b')) 'HTML provenance was not escaped'
+    Assert (-not $html.Contains('feature/a&b')) 'Raw branch name leaked into HTML'
+    & $gitExe -C $repo check-ignore --quiet -- '.deming/cycles/007-escaped/diagrams/overview.svg'
+    Assert ($LASTEXITCODE -eq 0) 'Diagram assets are not ignored'
 
     Assert-Refusal '../escape' 'Unsafe name accepted'
     Assert-Refusal 'BadName' 'Uppercase name accepted'

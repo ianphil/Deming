@@ -8,12 +8,12 @@ Deming is a set of agent instructions and skills for the Agent Development Lifec
 
 ## How it works
 
-Before a repository change, Deming asks whether to use a PDSA cycle or make the change directly, unless you have already chosen. Direct work means inspect, change, verify, and summarize—without cycle records or an automatic task branch. Read-only questions and planning discussions need neither a cycle nor a workflow question. The authoritative [workflow choice gate](deming.system.md#workflow-choice) defines selection and continuation.
+Before a repository change, Deming asks whether to use a PDSA cycle or make the change directly, unless you have already chosen. A user-provided task spec explicitly requiring PDSA counts as that choice; it does not replace scope confirmation. Reviewing a spec or merely mentioning PDSA does not authorize a cycle, and a later explicit direct choice overrides the spec. Direct work means inspect, change, verify, and summarize—without cycle records or an automatic task branch. Read-only questions and planning discussions need neither a cycle nor a workflow question. The authoritative [workflow choice gate](deming.system.md#workflow-choice) defines selection and continuation.
 
 When you select PDSA, the four skills ask the agent to predict what a change will do, make the change, and use the results to decide what to do next:
 
-1. [Plan](skills/plan/SKILL.md). Define the goal, scope, and acceptance criteria. Predict the result and choose how to test it.
-2. [Do](skills/do/SKILL.md). Run the planned experiment without contaminating the learning.
+1. [Plan](skills/plan/SKILL.md). Create an HTML implementation plan: purpose/problem/solution, prediction, scope, acceptance criteria, ordered tasks, phase testing strategies, and useful validated diagrams.
+2. [Do](skills/do/SKILL.md). Execute that plan phase by phase, update its checklist, run phase and global validation, and record evidence without rewriting the original prediction.
 3. [Study](skills/study/SKILL.md). Review the change, run focused tests, and compare the evidence with the prediction. Record what the agent learned and what remains uncertain.
 4. [Act](skills/act/SKILL.md). Adopt, revise, or abandon the change. Update the instructions or standards that need to change, or plan another experiment. Get authorization before pushing a branch or opening a pull request.
 
@@ -34,17 +34,37 @@ Use your actual Deming installation path if different. If the next number is `00
 ```text
 adr-ui/
 └── .deming/cycles/004-adr-crud/
-    ├── plan.md
+    ├── plan.html
     ├── do.md
     ├── study.md
-    └── act.md
+    ├── act.md
+    └── diagrams/             # created by Plan only when useful
+        ├── overview.html    # canonical diagram source
+        └── overview.svg     # extracted asset embedded in plan.html
 ```
 
-The files begin as pending scaffolds, not completed phase outputs. Plan fills `plan.md`; Do consumes it and fills `do.md`; Study consumes both and fills `study.md`; Act records the disposition in `act.md`. Resume by giving Deming the existing cycle directory, not by rerunning setup. Records are local-only and ignored: setup adds `/.deming/` to `.gitignore` when needed. Commit the ignore rule with the application changes, not the records. Existing tracked history is preserved. Ignored records support local session recovery but do not travel with a clone; summarize necessary evidence and decisions in the authorized PR or handoff.
+The four files begin as pending scaffolds, not completed phase outputs. Plan fills `plan.html`; Do executes and updates its checklist while filling `do.md`; Study consumes both and fills `study.md`; Act records the disposition in `act.md`. The HTML plan is the single source of truth, not a duplicate of a Markdown plan or a generated plan under `specs/`. Resume by giving Deming the existing cycle directory, not by rerunning setup. Records are local-only and ignored: setup adds `/.deming/` to `.gitignore` when needed. Commit the ignore rule with the application changes, not the records. Existing tracked history is preserved. Ignored records support local session recovery but do not travel with a clone; summarize necessary evidence and decisions in the authorized PR or handoff.
 
 Setup accepts ignored cycle paths and refuses dirty repositories, detached HEADs, and existing cycle directories or task branches. It does not commit, push, or merge. If writing fails after branch creation, inspect the retained branch and partial files before proceeding.
 
 Cycle closure is separate from accepting behavior. Study records passed, failed, or untested criteria with their evidence; Act carries every unresolved required criterion into an explicit required handoff. An HTTP response or a mock-storage test is not proof that the browser UI works.
+
+### HTML planning and diagrams
+
+Plan integrates guidance from Plan F3 and Diagram Design directly; those external skills are not installed or required. The plan carries append-only metadata and amendments, scoped implementation phases, `[]` / `[wip]` / `[x]` / `[f]` markers, per-phase testing strategies, and global validation. Do links checklist results to evidence in `do.md`; failed prerequisites stop dependent work. Readiness, execution completion, and behavioral acceptance are separate claims.
+
+Use diagrams only when they explain more than prose or a table. Keep static HTML sources and extracted SVGs under the cycle's ignored `diagrams/` directory, with shared visual tokens and accessible labels. Plan includes selection, complexity, geometry, and browser-review guidance. Bundled checks need only PowerShell, not the original skills or a Python package:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\plan-artifacts.ps1 -Mode Diagram -Path <cycle>\diagrams\overview.html
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\plan-artifacts.ps1 -Mode Export -Path <cycle>\diagrams\overview.html -OutputPath <cycle>\diagrams\overview.svg
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\plan-artifacts.ps1 -Mode Plan -Path <cycle>\plan.html
+# Add -Completed only when every phase/task/test marker should be [x].
+```
+
+Resolve these script paths from your Deming installation when working in another repository. Author XML-compatible HTML (balanced tags, quoted attributes, self-closing void tags, escaped text) for the structural checker. The helper verifies structure and source/SVG consistency, not semantic correctness, browser geometry, or safety of arbitrary untrusted HTML. Browser/visual inspection remains a separate check. Fonts have explicit local fallbacks so artifacts do not require network font loading.
+
+Old cycles containing only `plan.md` remain resumable without automatic conversion. If both formats exist, an explicit authoritative-plan handoff is required; otherwise Deming asks. See the [cycle plan format contract](deming.system.md#cycle-plan-format).
 
 ## Install for Pi
 
@@ -128,13 +148,15 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tests\installer.tests.ps1
 pwsh -NoProfile -File tests\installer.tests.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File tests\cycle.tests.ps1
 pwsh -NoProfile -File tests\cycle.tests.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File tests\plan-artifacts.tests.ps1
+pwsh -NoProfile -File tests\plan-artifacts.tests.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File tests\update.tests.ps1
 pwsh -NoProfile -File tests\update.tests.ps1
 ```
 
-### Workflow-choice evaluation
+### Workflow-choice and HTML-plan evaluation
 
-Use the [workflow-choice regression scenarios](tests/workflow-choice.md) in fresh sessions with the candidate instructions to check direct work, choice prompts, and explicit or resumed PDSA. These are behavioral checks, not proof supplied by the PowerShell suites.
+Use the [workflow-choice regression scenarios](tests/workflow-choice.md) in fresh sessions with the candidate instructions to check direct work, choice prompts, task-spec approval, HTML planning/diagrams, ordered Do execution, and explicit or resumed PDSA. These are behavioral checks, not proof supplied by the PowerShell suites.
 
 ### Live Pi evaluation (opt-in)
 

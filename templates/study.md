@@ -1,11 +1,11 @@
 # Study: {{cycle}}
 
 Status: pending
-Inputs: [plan.md](plan.md), [do.md](do.md)
+Inputs: [plan.html](plan.html), [do.md](do.md)
 
 ## Prediction versus results
 
-Compare the original prediction with the recorded evidence. Reference evidence IDs from `do.md`; distinguish planned evidence from supplemental checks.
+Reconcile the HTML phase/task/global checklist and amendments with Do's evidence; completion markers are not proof. Compare the original prediction with the recorded evidence. Reference evidence IDs from `do.md`; distinguish planned evidence from supplemental checks.
 
 ## Evidence classes
 
