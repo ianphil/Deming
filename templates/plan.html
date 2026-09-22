@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Plan: {{cycle}}</title>
+<style>
+:root { --paper:#f5f5f5; --paper-2:#ececec; --ink:#2d3142; --muted:#4f5d75; --soft:#7a8399; --rule:#bfc0c0; --accent:#eb6c36; --accent-tint:#fce9df; --link:#2e5aa8; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.6 'Geist',Arial,sans-serif; }
+main { max-width:1100px; margin:auto; padding:40px 24px; }
+h1,h2 { font-family:'Instrument Serif',Georgia,serif; font-weight:400; line-height:1.2; }
+h1 { font-size:40px; } h2 { font-size:28px; }
+a { color:var(--link); } code,pre,.status { font-family:'Geist Mono',Consolas,monospace; }
+header,section,.phase { margin-bottom:32px; } .phase { border-left:4px solid var(--accent); padding:4px 20px; }
+dt { font-weight:600; } dd { margin:0 0 8px; overflow-wrap:anywhere; }
+figure { margin:24px 0; overflow-x:auto; } img { display:block; width:960px; max-width:none; height:auto; }
+figcaption { color:var(--muted); } table { width:100%; border-collapse:collapse; }
+th,td { text-align:left; vertical-align:top; border:1px solid var(--rule); padding:8px; }
+pre { white-space:pre-wrap; overflow-wrap:anywhere; } .loop { background:var(--accent-tint); padding:12px; }
+@media print { body { background:white; } main { max-width:none; padding:0; } .phase,figure { break-inside:avoid; } img { width:100%; max-width:100%; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1>Plan: {{cycle}}</h1>
+<p id="plan-status">Status: pending</p>
+<details class="meta" open="open">
+<summary>Metadata</summary>
+<dl>
+<dt>Cycle</dt><dd>{{cycle}}</dd>
+<dt>Task branch</dt><dd>{{branch}}</dd>
+<dt>Base branch</dt><dd>{{base_branch}}</dd>
+<dt>Base commit</dt><dd>{{base_commit}}</dd>
+<dt>Created</dt><dd id="created">{{created_iso}}</dd>
+<dt>Modified</dt><dd id="modified">{{modified_iso_list}}</dd>
+<dt>Commits</dt><dd id="commits">{{base_commit}}</dd>
+<dt>Agent</dt><dd id="agent">{{agent_list}}</dd>
+<dt>Session</dt><dd id="session">{{session_list}}</dd>
+<dt>Back references</dt><dd id="back-refs">{{back_refs}}</dd>
+<dt>Forward references</dt><dd id="forward-refs">{{forward_refs}}</dd>
+</dl>
+</details>
+</header>
+<section id="purpose"><h2>Purpose and aim</h2><p>{{purpose_and_aim}}</p></section>
+<section id="problem"><h2>Problem and confirmed understanding</h2><p>{{problem_scope_confirmation}}</p></section>
+<section id="solution"><h2>Solution</h2><p>{{solution_and_alternatives}}</p>
+<!-- Optional hero/problem/solution/phase figures: choose useful subjects, then embed validated diagrams/slug.svg with alt and figcaption. Remove unused slots. -->
+</section>
+<section id="prediction"><h2>Theory and prediction</h2><p>{{original_theory_prediction_and_disconfirmation}}</p></section>
+<section id="scope"><h2>Scope and non-goals</h2><p>{{scope_non_goals_constraints_and_stopping_conditions}}</p></section>
+<section id="provenance"><h2>Provenance and bootstrap</h2><p>{{deming_version_freshness_and_bootstrap_authorization}}</p></section>
+<section id="files"><h2>Relevant files</h2>
+<h3>Existing files</h3><ul><li>{{existing_file_and_reason}}</li></ul>
+<h3>New files</h3><ul><li>{{new_file_and_reason}}</li></ul>
+</section>
+<section id="acceptance"><h2>Acceptance criteria and study method</h2>
+<table><thead><tr><th>ID</th><th>Required behavior and layer</th><th>Check and expected evidence</th></tr></thead>
+<tbody><tr><td>A1</td><td>{{atomic_behavior}}</td><td>{{check_evidence_and_theory_measure}}</td></tr></tbody></table>
+</section>
+<section id="phases"><h2>Implementation phases</h2>
+<p>Execute phases and tasks in order, top to bottom. Markers: [] idle; [wip] in progress; [x] complete; [f] failed or blocked (explain and link evidence).</p>
+<!-- repeat: duplicate a phase and its tasks as needed; give each a stable unique ID. -->
+<div class="phase" id="phase-1">
+<h3><code class="status">[]</code> Phase 1: {{phase_name}}</h3>
+<p>{{phase_goal_and_dependencies}}</p>
+<h4>1.1 {{task_name}}</h4>
+<ul class="checklist"><li id="task-1-1"><code class="status">[]</code> {{specific_action_and_acceptance_id}}</li></ul>
+<h4>1.2 Testing strategy</h4><p>{{technology_edge_cases_and_expected_results}}</p>
+<ul class="checklist"><li id="test-1-1"><code class="status">[]</code> <code>{{phase_validation_command}}</code> — {{what_it_proves}}</li></ul>
+<p class="loop">Resolve this phase before advancing: correct routine failures and rerun within the plan's bounds. If a check cannot run or pass, mark [f], retain the obligation, and stop dependent work. Only independent work may continue safely.</p>
+</div>
+</section>
+<section id="validation"><h2>Global validation</h2>
+<ul class="checklist"><li id="validation-1"><code class="status">[]</code> <code>{{global_validation_command}}</code> — {{required_behavior_it_proves}}</li></ul>
+<p>The implementation is not fully verified until every required check passes. A blocked check remains required in Study and Act.</p>
+</section>
+<section id="questionables"><h2>Questions and assumptions</h2>
+<details><summary>{{open_question_or_risk}}</summary><p>{{answer_assumption_or_blocker}}</p></details>
+</section>
+<section id="notes"><h2>Notes</h2><p>{{tradeoffs_dependencies_run_bounds_and_diagram_validation_evidence}}</p></section>
+<section id="amendments"><h2>Amendments</h2><!-- Append dated revisions here; preserve the original prediction and executed history. --></section>
+<section id="handoff"><h2>Handoff to Do</h2><p>{{readiness_and_unresolved_authorizations}}</p></section>
+</main>
+</body>
+</html>

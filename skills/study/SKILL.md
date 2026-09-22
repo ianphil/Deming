@@ -7,13 +7,13 @@ description: Compare execution evidence with the plan and recommend a dispositio
 
 ## Input
 
-The cycle directory, `plan.md`, `do.md`, and referenced evidence.
+The cycle directory, `plan.html`, its diagram sources/assets, `do.md`, and referenced evidence. For older cycles use the system's [legacy-plan rule](../../deming.system.md#cycle-plan-format).
 
 ## Process
 
-1. Recover the original theory, prediction, scope, and acceptance criteria. Record missing inputs as limitations rather than inventing them.
+1. Read the complete plan, metadata and amendments; recover the original theory, prediction, scope, and acceptance criteria. Reconcile every phase/task/test marker with `do.md` evidence IDs. An HTML `[x]` is a claim to verify, not evidence by itself; `[f]` and unstarted dependent tasks remain unresolved. Record missing inputs as limitations rather than inventing them.
 2. Inspect the changes against the recorded base commit, including uncommitted work, for correctness, scope, security, and contract issues. Run focused validation and record the commands and results in `study.md`.
-3. Run the validation defined in Plan. Report exactly what each check establishes; evidence from a substitute or narrower layer does not establish the full required behavior. Record unavailable checks and their observed blockers. Ask before installing missing tooling. Label any post hoc validation as supplemental rather than silently expanding the planned evidence.
+3. Run the phase and global validation defined in Plan. Review changed plan/diagram artifacts using Plan's structural and browser checks; successful extraction or a browser launch alone does not prove readable geometry. Report exactly what each check establishes; evidence from a substitute or narrower layer does not establish the full required behavior. Record unavailable checks and their observed blockers. Ask before installing missing tooling. Label any post hoc validation as supplemental rather than silently expanding the planned evidence.
 4. Compare prediction with reality. Split every compound acceptance criterion into atomic behaviors and give each a `passed`, `failed`, `partial`, `untested`, or `blocked` result with one or more evidence IDs and a limitation where applicable. Use these evidence classes: `executed` for direct behavior, `inspected` for source or structure review, `simulated` for mocks/stubs/overrides, `untested` when no evidence exists, and `blocked` when an attempted check was unavailable. A `passed` result requires direct executed evidence for every clause at the claimed layer; inspection or simulation alone cannot prove live behavior. Link reproducible checks and results, not just a PASS label. Keep observations separate from inferences, state the revised understanding of the theory and its limitations, and stage intended files or read untracked files explicitly before diff review; an empty diff does not review new files.
 5. Recommend a bounded disposition. List every `partial`, `failed`, `untested`, or `blocked` required behavior and its concrete next check. A cycle may close with a handoff, but required checks cannot become optional merely because the environment made them inconvenient.
 

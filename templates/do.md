@@ -1,7 +1,7 @@
 # Do: {{cycle}}
 
 Status: pending
-Input: [plan.md](plan.md)
+Input: [plan.html](plan.html)
 
 ## Changes and observations
 
@@ -11,9 +11,9 @@ Record what actually happened, including unexpected effects. Reference changed f
 
 Record every meaningful planned or supplemental attempt; do not remove failed attempts after a later retry succeeds.
 
-| ID | Planned or supplemental | Purpose | Exact command or artifact | Observed result and exit status | Establishes | Intervention or limitation |
-|---|---|---|---|---|---|---|
-| E1 |  |  |  |  |  |  |
+| ID | Phase/task/acceptance IDs | Planned or supplemental | Purpose | Exact command or artifact | Observed result and exit status | Establishes | Intervention or limitation |
+|---|---|---|---|---|---|---|---|
+| E1 |  |  |  |  |  |  |  |
 
 ## Evidence index
 
@@ -22,6 +22,10 @@ Reference the ledger IDs used by Study. Preserve reproducible outputs or artifac
 ## Deviations
 
 Record departures from the plan and any interventions, or state none.
+
+## Plan checklist reconciliation
+
+Link phase/task/test markers in `plan.html` to evidence IDs here. State each phase's final status, unresolved prerequisites, global validation results, and metadata entries appended. Preserve the original prediction and record approved revisions as amendments rather than rewriting executed history.
 
 ## Handoff to Study
 
