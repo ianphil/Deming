@@ -76,6 +76,12 @@ Resolve these script paths from your Deming installation when working in another
 
 Old cycles containing only `plan.md` remain resumable without automatic conversion. If both formats exist, an explicit authoritative-plan handoff is required; otherwise Deming asks. See the [cycle plan format contract](deming.system.md#cycle-plan-format).
 
+## Local workflow prototype
+
+The optional [Prefect workflow prototype](workflows/README.md) runs a prepared PDSA cycle through four headless Pi phase tasks, with a persisted plan-review pause and guarded recovery. It uses your existing Pi Copilot authentication and defaults to `gpt-6.1-sol`; no Copilot SDK is needed. A local Docker container hosts Prefect's UI/API, while a `uv`-managed host process executes Pi without changing your interactive configuration.
+
+This is a trusted, single-user experiment—not a sandbox, production service, or general workflow generator. See the guide for setup, approvals, evidence, limitations, and opt-in live trials.
+
 ## Install for Pi
 
 The PowerShell installer installs Pi if needed, clones Deming to `$HOME\.deming`, and adds its instructions and skills to your global Pi configuration. Deming then applies across projects for your user account.
